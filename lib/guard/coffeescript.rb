@@ -17,6 +17,16 @@ module Guard
     def run_all
 
       paths = Inspector.clean(Watcher.match_files(self, Dir.glob(File.join('**', '*.coffee'))))
+      compile_to_subdirectory(paths, options)
+
+    end
+
+    def run_on_change(paths)
+      paths = Inspector.clean(paths)
+      compile_to_subdirectory(paths, options)
+    end
+
+    def compile_to_subdirectory(paths, options)
 
       paths.each do |path|
 
@@ -24,14 +34,10 @@ module Guard
 
         output = File.join(options[:output], subdirectory)
 
-        Runner.run([path], options.merge(:output => output, :message => 'Compile all CoffeeScripts')) unless paths.empty?
+        Runner.run([path], options.merge(:output => output)) unless paths.empty?
 
       end
-    end
 
-    def run_on_change(paths)
-      paths = Inspector.clean(paths)
-      Runner.run(paths, options) unless paths.empty?
     end
 
   end
