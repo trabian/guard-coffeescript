@@ -15,8 +15,18 @@ module Guard
     end
 
     def run_all
+
       paths = Inspector.clean(Watcher.match_files(self, Dir.glob(File.join('**', '*.coffee'))))
-      Runner.run(paths, options.merge(:message => 'Compile all CoffeeScripts')) unless paths.empty?
+
+      paths.each do |path|
+
+        subdirectory = File.dirname(path).slice((path.index('/') + 1)..-1)
+
+        output = File.join(options[:output], subdirectory)
+
+        Runner.run([path], options.merge(:output => output, :message => 'Compile all CoffeeScripts')) unless paths.empty?
+
+      end
     end
 
     def run_on_change(paths)
