@@ -12,6 +12,7 @@ module Guard
       @watchers, @options = watchers, options
       @options[:output] ||= 'javascripts'
       @options[:nowrap] ||= false
+      @options[:strip_leading_path] ||= false
     end
 
     def run_all
@@ -30,7 +31,12 @@ module Guard
 
       paths.each do |path|
 
-        subdirectory = File.dirname(path).slice((path.index('/') + 1)..-1)
+        subdirectory = File.dirname(path)
+        if @options[:strip_leading_path]
+          subdirectory = subdirectory.gsub(@options[:strip_leading_path], '')
+        else
+          subdirectory = subdirectory.slice((path.index('/') + 1)..-1)
+        end
 
         output = File.join(options[:output], subdirectory)
 
