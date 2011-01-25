@@ -32,7 +32,7 @@ module Guard
           cmd_parts = []
           cmd_parts << 'coffee'
           cmd_parts << '-c'
-          cmd_parts << '--no-wrap' if options[:nowrap]
+          cmd_parts << '--bare' if options[:nowrap]
           cmd_parts << "-o #{ options[:output] }"
           cmd_parts << paths.join(' ')
           cmd_parts.join(' ')
